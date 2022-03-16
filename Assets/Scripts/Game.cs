@@ -15,10 +15,6 @@ public class Game : MonoBehaviour
     void Start()
     {
         grid = new int[3, 3];
-        /*int[,] board = {{ 'x', 'o', 'x' },
-                     { 'o', 'o', 'x' },
-                     { '_', '_', '_' }};*/
-
     }
     void Update()
     {
@@ -28,7 +24,7 @@ public class Game : MonoBehaviour
             {
                 P1Turn();
             }
-            else if (playerID == 2 /*&& Input.GetMouseButtonDown(0)*/)
+            else if (playerID == 2)
             {
                 P2Turn();
             }
@@ -79,16 +75,10 @@ public class Game : MonoBehaviour
 
     void P2Turn()
     {
-        //Vector3 mousePos = Input.mousePosition;
-        //Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
-        //Debug.Log("X: " + (int)worldPosition.x + "Y: " + (int)worldPosition.y);
-        //if (grid[(int)worldPosition.x, (int)worldPosition.y] == 0) //Si il n'y a rien
         {
-            //grid[(int)worldPosition.x, (int)worldPosition.y] = 2;
             Move bestMove = findBestMove(grid);
             Debug.Log("ROW: " + bestMove.row + " COL: " + bestMove.col);
             grid[bestMove.row, bestMove.col] = 2;
-            //Instantiate(Cross, new Vector3((int)worldPosition.x + offset, (int)worldPosition.y + offset, 0), Quaternion.identity);
             Instantiate(Cross, new Vector3(bestMove.row + offset, bestMove.col + offset, 0), Quaternion.identity);
             SwitchPlayer();
             if (checkWinner(2) == true)
@@ -141,8 +131,6 @@ public class Game : MonoBehaviour
     }
 
     ////////////////////////////////////////////////AI////////////////////////////////////////////////
-    // C# program to find the
-    // next optimal move for a player
     class Move
     {
         public int row, col;
@@ -150,9 +138,6 @@ public class Game : MonoBehaviour
 
     static int player = 2, opponent = 1;
 
-    // This function returns true if there are moves
-    // remaining on the board. It returns false if
-    // there are no moves left to play.
     static bool isMovesLeft(int[,] board)
     {
         for (int i = 0; i < 3; i++)
@@ -162,8 +147,6 @@ public class Game : MonoBehaviour
         return false;
     }
 
-    // This is the evaluation function as discussed
-    // in the previous article ( http://goo.gl/sJgv68 )
     static int evaluate(int[,] b)
     {
         // Checking for Rows for X or O victory.
@@ -214,29 +197,20 @@ public class Game : MonoBehaviour
         return 0;
     }
 
-    // This is the minimax function. It considers all
-    // the possible ways the game can go and returns
-    // the value of the board
+    // This is the minimax function
     static int minimax(int[,] board, int depth, bool isMax)
     {
         int score = evaluate(board);
 
-        // If Maximizer has won the game
-        // return his/her evaluated score
         if (score == 10)
             return score;
 
-        // If Minimizer has won the game
-        // return his/her evaluated score
         if (score == -10)
             return score;
 
-        // If there are no more moves and
-        // no winner then it is a tie
         if (isMovesLeft(board) == false)
             return 0;
 
-        // If this maximizer's move
         if (isMax)
         {
             int best = -1000;
@@ -252,7 +226,6 @@ public class Game : MonoBehaviour
                         // Make the move
                         board[i, j] = player;
 
-                        // Call minimax recursively and choose
                         // the maximum value
                         best = Mathf.Max(best, minimax(board,
                                         depth + 1, !isMax));
@@ -281,7 +254,6 @@ public class Game : MonoBehaviour
                         // Make the move
                         board[i, j] = opponent;
 
-                        // Call minimax recursively and choose
                         // the minimum value
                         best = Mathf.Min(best, minimax(board,
                                         depth + 1, !isMax));
@@ -296,7 +268,6 @@ public class Game : MonoBehaviour
     }
 
     // This will return the best possible
-    // move for the player
     static Move findBestMove(int[,] board)
     {
         int bestVal = -1000;
@@ -304,9 +275,7 @@ public class Game : MonoBehaviour
         bestMove.row = -1;
         bestMove.col = -1;
 
-        // Traverse all cells, evaluate minimax function
-        // for all empty cells. And return the cell
-        // with optimal value.
+        // optimal value.
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
@@ -317,16 +286,12 @@ public class Game : MonoBehaviour
                     // Make the move
                     board[i, j] = player;
 
-                    // compute evaluation function for this
-                    // move.
                     int moveVal = minimax(board, 0, false);
 
                     // Undo the move
                     board[i, j] = 0;
 
-                    // If the value of the current move is
-                    // more than the best value, then update
-                    // best/
+                    // best
                     if (moveVal > bestVal)
                     {
                         bestMove.row = i;
